@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,40 +8,37 @@ public class GraphTest : MonoBehaviour
         DFS,
         BFS,
         DFSRecursive,
-        PathFindingBFS,
+        pathFindingBFS,
         Dijkstra,
-        
+        AStar,
     }
-
     public Transform uiNodeRoot;
 
-    public UIGraphNode nodePrefab;
-    private List<UIGraphNode> uiNodes = new List<UIGraphNode>();
-
+    public UiGraphNode nodePrefab;
+    public List<UiGraphNode> uiNodes = new List<UiGraphNode>();
     private Graph graph;
 
     public Algorithm algorithm;
-    public int startId;
-    public int endId;
 
+    public int StartId;
+    public int endId;
     private void Start()
     {
         int[,] map = new int[5, 5]
         {
             {1,-1,1,1,1 },
-            {1,-1,5,1,1 },
-            {1,-1,3,8,1 },
-            {1,-1,4,1,1 },
-            {1,1,5,7,1 },
+            {1,-1,1,10,1 },
+            {1,-1,2,20,1 },
+            {1,-1,15,20,1},
+            {1,1,1,5,1 }
         };
         graph = new Graph();
         graph.Init(map);
         InitUiNodes(graph);
     }
-
     private void InitUiNodes(Graph graph)
     {
-        foreach (var node in graph.nodes)
+        foreach(var node in graph.nodes)
         {
             var uiNode = Instantiate(nodePrefab, uiNodeRoot);
             uiNode.SetNode(node);
@@ -62,22 +58,25 @@ public class GraphTest : MonoBehaviour
     {
         var search = new GraphSearch();
         search.Init(graph);
-        switch(algorithm)
+        switch (algorithm)
         {
             case Algorithm.DFS:
-                search.DFS(graph.nodes[startId]);
+                search.DFS(graph.nodes[StartId]);
                 break;
             case Algorithm.BFS:
-                search.BFS(graph.nodes[startId]);
+                search.BFS(graph.nodes[StartId]);
                 break;
             case Algorithm.DFSRecursive:
-                search.DFSRecursive(graph.nodes[startId]);
+                search.DFSRecrusive(graph.nodes[StartId]);
                 break;
-            case Algorithm.PathFindingBFS:
-                search.PathFindingBFS(graph.nodes[startId], graph.nodes[endId]);
+            case Algorithm.pathFindingBFS:
+                search.pathFindingBFS(graph.nodes[StartId], graph.nodes[endId]);
                 break;
             case Algorithm.Dijkstra:
-                search.Dijkstra(graph.nodes[startId], graph.nodes[endId]);
+                search.Dijkstra(graph.nodes[StartId], graph.nodes[endId]);
+                break;
+            case Algorithm.AStar:
+                search.AStar(graph.nodes[StartId], graph.nodes[endId]);
                 break;
         }
         ResetUiNodes();
@@ -90,13 +89,12 @@ public class GraphTest : MonoBehaviour
             }
             return;
         }
-
-        for(int i =0; i< search.path.Count; i++)
+        for(int i = 0; i < search.path.Count; i++)
         {
             var node = search.path[i];
             var color = Color.Lerp(Color.red, Color.green, (float)i / (search.path.Count - 1));
             uiNodes[node.id].SetColor(color);
-            uiNodes[node.id].SetText($"ID: {node.id}\nWeight: {node.weight}\nPath: {i}");
+            uiNodes[node.id].SetText($"ID: {node.id}\nweight: {node.weight} \nPath: {i}");
         }
     }
 }

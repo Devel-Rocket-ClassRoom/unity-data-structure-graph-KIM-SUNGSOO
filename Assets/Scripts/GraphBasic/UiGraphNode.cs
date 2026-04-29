@@ -1,17 +1,16 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-public class UIGraphNode : MonoBehaviour
+
+public class UiGraphNode : MonoBehaviour
 {
     public Image image;
     public TextMeshProUGUI text;
-
     private GraphNode node;
-
     public void Reset()
     {
-        SetColor(node.CanVisit ? Color.white : Color.gray);
-        SetText($"ID: {node.id}\nWeight: {node.weight}");
+        SetColor(node.CanVisit ? Color.white : Color.grey);
+        SetText($"ID: {node.id}\nweight: {node.weight}");
     }
     public void SetNode(GraphNode node)
     {
